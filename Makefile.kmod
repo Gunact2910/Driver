@@ -1,0 +1,16 @@
+obj-m := kb_driver.o
+kb_driver-objs := driver/usb_keyboard.o
+
+KERNEL_DIR ?= /lib/modules/$(shell uname -r)/build
+MODULE_DIR := $(CURDIR)
+
+all:
+	$(MAKE) -C $(KERNEL_DIR) M=$(MODULE_DIR) modules
+
+clean:
+	$(MAKE) -C $(KERNEL_DIR) M=$(MODULE_DIR) clean
+
+install:
+	$(MAKE) -C $(KERNEL_DIR) M=$(MODULE_DIR) modules_install
+
+.PHONY: all clean install
