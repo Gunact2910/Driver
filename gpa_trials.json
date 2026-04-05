@@ -1,0 +1,19 @@
+{
+  "CT1": [
+    {
+      "course_name": "lap trinh driver",
+      "credits": "3",
+      "score": "9.60"
+    },
+    {
+      "course_name": "an toan bao mat thong tin",
+      "credits": "2",
+      "score": "9.50"
+    },
+    {
+      "course_name": "he dieu hanh nhung thoi gian thuc",
+      "credits": "3",
+      "score": "9.50"
+    }
+  ]
+}

@@ -10,7 +10,8 @@ Ban phuc dung cua mot repo C/Linux bi mat source goc va hong mot phan artefact.
 ## Nhung gi da phuc dung
 
 - Phan user-space duoc reverse tu binary `demo_p1`.
-- Hanh vi menu, luong dang nhap, dinh dang `users.dat` va `students.dat` duoc giu tuong thich voi binary cu.
+- Hanh vi menu, luong dang nhap va dinh dang `users.dat` duoc giu tuong thich voi binary cu.
+- `students.dat` ho tro doc du lieu cu 3 truong va ghi du lieu mo rong cho desktop/web app.
 - Ham `sha256_hex()` giu nguyen ten de tuong thich, nhung binary goc thuc te khong dung SHA-256.
   No dung hash 32-bit kieu FNV-1a roi lap thanh 64 ky tu hex.
 - Kernel module goc khong con du artefact hop le de khoi phuc tinh nang. Repo nay chi dung lai khung `kb_driver`
@@ -53,11 +54,21 @@ File nhi phan gom cac ban ghi lap lai:
 
 ### `students.dat`
 
-File text, moi sinh vien chiem 3 dong:
+File text. Ban ghi cu van doc duoc theo 3 dong:
 
 1. Ma SV
 2. Ho va ten
 3. Lop
+
+Ban ghi moi duoc ghi voi header `STUDENT_V2` va 7 truong:
+
+1. Ma SV
+2. Ho va ten
+3. Lop
+4. Dia chi
+5. So dien thoai
+6. Nganh hoc
+7. GPA
 
 ## Build kernel module
 
