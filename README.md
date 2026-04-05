@@ -73,3 +73,4 @@ make -f Makefile.kmod
 - Khong con du source/module goc de phuc dung dung chuc nang kernel ban dau.
 - Ban phuc dung nay uu tien build lai duoc va giu tuong thich du lieu voi `demo_p1`.
 # DriverLinux
+# DriverLinux
