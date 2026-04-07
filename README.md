@@ -2,21 +2,33 @@
 
 Bản phục dựng và mở rộng từ một repo C/Linux bị mất mã nguồn gốc và hỏng một phần artefact.
 
-Dự án hiện có 3 lớp chính:
+Repo hiện có thể tách thành 2 bài độc lập:
+
+- bài 1: hệ thống quản lý sinh viên
+- bài 2: driver USB bàn phím
+
+Trong đó bài 1 có 3 lớp giao diện:
 
 - ứng dụng C user-space giữ tính tương thích với binary cũ
 - ứng dụng desktop PyQt5 để thao tác bằng giao diện
 - ứng dụng web Python chạy trên trình duyệt local
 
-Ngoài phần quản lý sinh viên, repo còn có một bài tách riêng về driver USB bàn phím với dashboard local để demo.
-
 ## Thành phần chính
+
+### Bài 1: Quản lý sinh viên
 
 - `student_mgmt`: chương trình C user-space
 - `student_app.py`: ứng dụng desktop PyQt5
 - `student_web.py`: ứng dụng web local
+- `auth.c`, `student.c`, `sha256.c`: lõi xử lý đăng nhập và dữ liệu
+- `string_utils.c`, `string_utils.h`: wrapper chuẩn hóa chuỗi cho bài 1
+- `driver/string_utils_shared.h`: lõi chuẩn hóa xâu dùng chung đặt trong thư mục `driver`
+
+### Bài 2: Driver USB bàn phím
+
 - `kb_driver`: khung kernel module phục dựng từ artefact còn sót lại
 - `keyboard_dashboard.py`: dashboard local cho bài driver USB bàn phím
+- `keyboard_dashboard_app.py`: dashboard desktop PyQt5 cho bài driver USB bàn phím
 
 ## Tính năng hiện tại
 
@@ -93,10 +105,12 @@ GPA = tổng(điểm * số tín) / tổng số tín
 - `auth.c`, `auth.h`: nạp/lưu user và xác thực
 - `student.c`, `student.h`: nạp/lưu danh sách sinh viên
 - `sha256.c`, `sha256.h`: hàm hash
-- `string_utils.c`, `string_utils.h`: chuẩn hóa chuỗi
+- `string_utils.c`, `string_utils.h`: API chuẩn hóa chuỗi của bài 1
+- `driver/string_utils_shared.h`: lõi chuẩn hóa xâu đặt trong thư mục `driver` và được bài 1 dùng lại
 - `student_app.py`: ứng dụng desktop
 - `student_web.py`: ứng dụng web
 - `common.h`: các hằng số và struct dùng chung
+- `driver/usb_keyboard.c`: lõi driver USB bàn phím của bài 2
 
 ## Chạy chương trình C
 
@@ -125,12 +139,24 @@ Chạy:
 python3 student_app.py
 ```
 
+Hoặc:
+
+```sh
+make app
+```
+
 ## Chạy ứng dụng web
 
 Chạy:
 
 ```sh
 python3 student_web.py
+```
+
+Hoặc:
+
+```sh
+make webui
 ```
 
 Mặc định web app chạy tại:
@@ -204,6 +230,13 @@ File này:
 - đổi mật khẩu
 - tính GPA dự kiến
 
+## Ghi chú cho bài 1
+
+- bài 1 sử dụng hàm chuẩn hóa xâu được xây dựng trong thư mục `driver`
+- phần chương trình C của bài 1 gọi `normalize_str()` trong `string_utils.c`
+- phần xử lý chuẩn hóa lõi dùng chung nằm ở `driver/string_utils_shared.h`
+- hệ thống đăng nhập bằng `username` và `password`, trong đó mật khẩu được băm bằng SHA-256
+
 ## Build kernel module
 
 Cần Linux headers cho kernel đang chạy:
@@ -238,6 +271,18 @@ Hoặc:
 
 ```sh
 make kbdash
+```
+
+Chạy dashboard desktop:
+
+```sh
+python3 keyboard_dashboard_app.py
+```
+
+Hoặc:
+
+```sh
+make kbdash-app
 ```
 
 Mặc định dashboard chạy tại:

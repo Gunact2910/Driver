@@ -3,21 +3,11 @@
 #include <linux/kernel.h>
 #include <linux/module.h>
 
+#include "string_utils_shared.h"
+
 size_t kb_normalize_ascii(char *dst, const char *src)
 {
-    size_t written = 0;
-
-    while (*src != '\0') {
-        unsigned char ch = (unsigned char)*src++;
-
-        if (isspace(ch)) {
-            continue;
-        }
-        dst[written++] = tolower(ch);
-    }
-
-    dst[written] = '\0';
-    return written;
+    return kb_normalize_ascii_impl(dst, src);
 }
 EXPORT_SYMBOL_GPL(kb_normalize_ascii);
 
