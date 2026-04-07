@@ -8,12 +8,15 @@ Dự án hiện có 3 lớp chính:
 - ứng dụng desktop PyQt5 để thao tác bằng giao diện
 - ứng dụng web Python chạy trên trình duyệt local
 
+Ngoài phần quản lý sinh viên, repo còn có một bài tách riêng về driver USB bàn phím với dashboard local để demo.
+
 ## Thành phần chính
 
 - `student_mgmt`: chương trình C user-space
 - `student_app.py`: ứng dụng desktop PyQt5
 - `student_web.py`: ứng dụng web local
 - `kb_driver`: khung kernel module phục dựng từ artefact còn sót lại
+- `keyboard_dashboard.py`: dashboard local cho bài driver USB bàn phím
 
 ## Tính năng hiện tại
 
@@ -209,11 +212,59 @@ Cần Linux headers cho kernel đang chạy:
 make -f Makefile.kmod
 ```
 
+## Dashboard cho bài 2: Driver USB bàn phím
+
+Driver USB bàn phím được mở rộng để:
+
+- ghi nhận sự kiện `pressed` và `released`
+- giữ lịch sử sự kiện gần nhất trong bộ đệm vòng
+- thống kê số lần nhấn/thả theo từng mã phím
+- xuất trạng thái qua `/proc/kb_driver`
+
+Các lệnh điều khiển hỗ trợ qua `/proc/kb_driver`:
+
+- `clear_history`
+- `reset_stats`
+- `logging=1`
+- `logging=0`
+
+Chạy dashboard local:
+
+```sh
+python3 keyboard_dashboard.py
+```
+
+Hoặc:
+
+```sh
+make kbdash
+```
+
+Mặc định dashboard chạy tại:
+
+```text
+http://127.0.0.1:8081
+```
+
+Dashboard hiển thị:
+
+- trạng thái module
+- danh sách USB keyboard interface
+- lịch sử sự kiện gần nhất
+- thống kê theo mã phím
+- nút bind/unbind và điều khiển logging
+
+Lưu ý:
+
+- thao tác `bind/unbind` và ghi vào `/proc/kb_driver` có thể cần quyền `root`
+- nếu muốn điều khiển trực tiếp từ dashboard, nên chạy bằng quyền phù hợp trong môi trường local test
+
 ## Ghi chú
 
 - Phần user-space C ban đầu được phục dựng để giữ hành vi gần với binary `demo_p1`
 - `students.dat` được mở rộng để phục vụ desktop app và web app
 - Repo hiện có cả source, file build và một số file dữ liệu runtime
+- Phần driver USB bàn phím hiện có thể được tách thành bài riêng với giao diện dashboard local để trình diễn
 
 ## Giới hạn
 

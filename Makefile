@@ -24,4 +24,10 @@ webui:
 app:
 	python3 student_app.py
 
-.PHONY: all clean run webui app
+kbdash:
+	python3 keyboard_dashboard.py
+
+kbdash-app:
+	python3 keyboard_dashboard_app.py
+
+.PHONY: all clean run webui app kbdash kbdash-app

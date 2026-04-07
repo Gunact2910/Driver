@@ -1368,6 +1368,8 @@ deps_driver/usb_keyboard.o := \
   /usr/src/linux-headers-6.18.12+kali-common/include/linux/bpf_types.h \
     $(wildcard include/config/NETFILTER_BPF_LINK) \
     $(wildcard include/config/XDP_SOCKETS) \
+  /usr/src/linux-headers-6.18.12+kali-common/include/linux/proc_fs.h \
+    $(wildcard include/config/PROC_PID_ARCH_STATUS) \
   /usr/src/linux-headers-6.18.12+kali-common/include/linux/usb.h \
     $(wildcard include/config/USB_MON) \
     $(wildcard include/config/USB_XHCI_SIDEBAND) \
