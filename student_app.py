@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ctypes
 import hashlib
 import json
 import os
@@ -37,6 +38,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 USERS_FILE = os.path.join(BASE_DIR, "users.dat")
 STUDENTS_FILE = os.path.join(BASE_DIR, "students.dat")
 GPA_TRIALS_FILE = os.path.join(BASE_DIR, "gpa_trials.json")
+KB_NORMALIZE_LIB = os.path.join(BASE_DIR, "libkbnormalize.so")
 
 USERNAME_LEN = 32
 PASSWORD_HASH_LEN = 65
@@ -70,13 +72,45 @@ PUBLIC_SEARCH_FIELD_OPTIONS = [
     ("Nganh hoc", "major"),
 ]
 
+_kb_normalize_lib: ctypes.CDLL | None = None
+
+
+def _load_kb_normalize_lib() -> ctypes.CDLL | None:
+    global _kb_normalize_lib
+
+    if _kb_normalize_lib is not None:
+        return _kb_normalize_lib
+    if not os.path.exists(KB_NORMALIZE_LIB):
+        return None
+
+    library = ctypes.CDLL(KB_NORMALIZE_LIB)
+    library.kb_normalize_ascii_user.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_size_t]
+    library.kb_normalize_ascii_user.restype = ctypes.c_int
+    _kb_normalize_lib = library
+    return library
+
+
+def normalize_via_driver(value: str) -> str:
+    encoded = value.encode("utf-8", errors="ignore")
+    library = _load_kb_normalize_lib()
+
+    if library is None:
+        return "".join(ch.lower() for ch in value if not ch.isspace())
+
+    buffer_size = max(len(encoded) + 1, 1)
+    output = ctypes.create_string_buffer(buffer_size)
+    status = library.kb_normalize_ascii_user(encoded, output, buffer_size)
+    if status != 0:
+        return "".join(ch.lower() for ch in value if not ch.isspace())
+    return output.value.decode("utf-8", errors="ignore")
+
 
 def collapse_spaces(value: str) -> str:
     return " ".join(value.strip().split())
 
 
 def normalize_student_code(value: str) -> str:
-    return "".join(collapse_spaces(value).split()).upper()
+    return normalize_via_driver(value).upper()
 
 
 def normalize_full_name(value: str) -> str:
@@ -135,8 +169,8 @@ def parse_course_credits(value: str) -> int:
 
 
 def normalize_login_username(value: str) -> str:
-    collapsed = "".join(collapse_spaces(value).split())
-    if collapsed.lower() == ADMIN_USERNAME:
+    collapsed = normalize_via_driver(value)
+    if collapsed == ADMIN_USERNAME:
         return ADMIN_USERNAME
     return collapsed.upper()
 
