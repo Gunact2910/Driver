@@ -181,7 +181,7 @@ class StatCard(QFrame):
 class KeyboardDashboardWindow(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
-        self.setWindowTitle("USB Keyboard Driver Dashboard")
+        self.setWindowTitle("Bang Dieu Khien Driver Ban Phim USB")
         self.resize(1180, 820)
 
         central = QWidget()
@@ -196,21 +196,21 @@ class KeyboardDashboardWindow(QMainWindow):
         hero_layout.setContentsMargins(20, 18, 20, 18)
         hero_layout.setSpacing(10)
 
-        title = QLabel("USB Keyboard Driver Dashboard")
+        title = QLabel("Bang Dieu Khien Driver Ban Phim USB")
         title.setObjectName("heroTitle")
-        subtitle = QLabel("Desktop app cho bai 2: doc /proc/kb_driver, hien thi su kien phim va dieu khien bind/unbind.")
+        subtitle = QLabel("Ung dung desktop cho bai 2: doc /proc/kb_driver, hien thi su kien phim va dieu khien bind/unbind.")
         subtitle.setWordWrap(True)
         subtitle.setObjectName("heroSubtitle")
 
         toolbar = QHBoxLayout()
         toolbar.setSpacing(8)
-        self.bind_button = QPushButton("Bind All")
-        self.unbind_button = QPushButton("Unbind All")
-        self.logging_on_button = QPushButton("Logging On")
-        self.logging_off_button = QPushButton("Logging Off")
-        self.clear_button = QPushButton("Clear History")
-        self.reset_button = QPushButton("Reset Stats")
-        self.refresh_button = QPushButton("Refresh")
+        self.bind_button = QPushButton("Gan Tat Ca")
+        self.unbind_button = QPushButton("Go Gan Tat Ca")
+        self.logging_on_button = QPushButton("Bat Ghi Log")
+        self.logging_off_button = QPushButton("Tat Ghi Log")
+        self.clear_button = QPushButton("Xoa Lich Su")
+        self.reset_button = QPushButton("Dat Lai Thong Ke")
+        self.refresh_button = QPushButton("Lam Moi")
 
         for button in (
             self.bind_button,
@@ -223,7 +223,7 @@ class KeyboardDashboardWindow(QMainWindow):
         ):
             toolbar.addWidget(button)
 
-        self.message_label = QLabel("Waiting for first refresh...")
+        self.message_label = QLabel("Dang cho lan cap nhat dau tien...")
         self.message_label.setObjectName("messageBar")
 
         hero_layout.addWidget(title)
@@ -235,10 +235,10 @@ class KeyboardDashboardWindow(QMainWindow):
         stats_layout = QGridLayout()
         stats_layout.setHorizontalSpacing(12)
         stats_layout.setVerticalSpacing(12)
-        self.module_card = StatCard("Module")
-        self.device_card = StatCard("Active Devices")
-        self.press_card = StatCard("Press Events")
-        self.release_card = StatCard("Release Events")
+        self.module_card = StatCard("Trang Thai Module")
+        self.device_card = StatCard("Thiet Bi Dang Hoat Dong")
+        self.press_card = StatCard("So Lan Nhan Phim")
+        self.release_card = StatCard("So Lan Nha Phim")
         stats_layout.addWidget(self.module_card, 0, 0)
         stats_layout.addWidget(self.device_card, 0, 1)
         stats_layout.addWidget(self.press_card, 0, 2)
@@ -249,45 +249,45 @@ class KeyboardDashboardWindow(QMainWindow):
         panels.setHorizontalSpacing(14)
         panels.setVerticalSpacing(14)
 
-        state_box = QGroupBox("Driver State")
+        state_box = QGroupBox("Trang Thai Driver")
         state_layout = QVBoxLayout(state_box)
         self.state_logging = QLabel("-")
         self.state_history = QLabel("0")
         self.state_proc = QLabel(PROC_FILE)
         for label in (self.state_logging, self.state_history, self.state_proc):
             label.setTextInteractionFlags(Qt.TextSelectableByMouse)
-        state_layout.addWidget(QLabel("Logging enabled"))
+        state_layout.addWidget(QLabel("Ghi log"))
         state_layout.addWidget(self.state_logging)
-        state_layout.addWidget(QLabel("History entries"))
+        state_layout.addWidget(QLabel("So muc lich su"))
         state_layout.addWidget(self.state_history)
-        state_layout.addWidget(QLabel("Proc file"))
+        state_layout.addWidget(QLabel("Tep proc"))
         state_layout.addWidget(self.state_proc)
         state_layout.addStretch(1)
 
-        devices_box = QGroupBox("USB Keyboard Interfaces")
+        devices_box = QGroupBox("Giao Dien Ban Phim USB")
         devices_layout = QVBoxLayout(devices_box)
         self.devices_table = QTableWidget(0, 4)
-        self.devices_table.setHorizontalHeaderLabels(["Interface", "Device", "VID:PID", "Driver"])
+        self.devices_table.setHorizontalHeaderLabels(["Giao Dien", "Thiet Bi", "VID:PID", "Driver"])
         self.devices_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.devices_table.setEditTriggers(QTableWidget.NoEditTriggers)
         self.devices_table.setSelectionBehavior(QTableWidget.SelectRows)
         self.devices_table.setSelectionMode(QTableWidget.SingleSelection)
         devices_layout.addWidget(self.devices_table)
 
-        history_box = QGroupBox("Recent Events")
+        history_box = QGroupBox("Su Kien Gan Day")
         history_layout = QVBoxLayout(history_box)
         self.history_table = QTableWidget(0, 6)
-        self.history_table.setHorizontalHeaderLabels(["Seq", "Time", "Interface", "Action", "Key", "Usage"])
+        self.history_table.setHorizontalHeaderLabels(["STT", "Thoi Gian", "Giao Dien", "Hanh Dong", "Phim", "Ma Usage"])
         self.history_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.history_table.setEditTriggers(QTableWidget.NoEditTriggers)
         self.history_table.setSelectionBehavior(QTableWidget.SelectRows)
         self.history_table.setSelectionMode(QTableWidget.SingleSelection)
         history_layout.addWidget(self.history_table)
 
-        stats_box = QGroupBox("Key Statistics")
+        stats_box = QGroupBox("Thong Ke Phim")
         key_stats_layout = QVBoxLayout(stats_box)
         self.key_stats_table = QTableWidget(0, 4)
-        self.key_stats_table.setHorizontalHeaderLabels(["Usage", "Name", "Pressed", "Released"])
+        self.key_stats_table.setHorizontalHeaderLabels(["Ma Usage", "Ten Phim", "So Lan Nhan", "So Lan Nha"])
         self.key_stats_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.key_stats_table.setEditTriggers(QTableWidget.NoEditTriggers)
         self.key_stats_table.setSelectionBehavior(QTableWidget.SelectRows)
@@ -415,19 +415,26 @@ class KeyboardDashboardWindow(QMainWindow):
         ok, output = run_command([STATUS_SCRIPT])
         if not ok:
             return [], output
-        return parse_status_output(output), "Dashboard updated"
+        return parse_status_output(output), "Dashboard da duoc cap nhat"
+
+    def translate_action(self, action: str) -> str:
+        if action == "pressed":
+            return "Nhan"
+        if action == "released":
+            return "Nha"
+        return action
 
     def refresh_dashboard(self) -> None:
         proc_state = read_proc_state()
         devices, status_message = self.collect_status_devices()
         module_loaded = os.path.isdir("/sys/bus/usb/drivers/kb_driver")
 
-        self.module_card.set_value("Loaded" if module_loaded else "Not loaded")
+        self.module_card.set_value("Da nap" if module_loaded else "Chua nap")
         self.device_card.set_value(str(proc_state["active_devices"]))
         self.press_card.set_value(str(proc_state["total_press_events"]))
         self.release_card.set_value(str(proc_state["total_release_events"]))
 
-        self.state_logging.setText("Yes" if proc_state["logging_enabled"] else "No")
+        self.state_logging.setText("Bat" if proc_state["logging_enabled"] else "Tat")
         self.state_history.setText(str(proc_state["history_entries"]))
 
         device_rows = [
@@ -446,7 +453,7 @@ class KeyboardDashboardWindow(QMainWindow):
                 str(event["seq"]),
                 self.format_timestamp(event["timestamp"]),
                 event["interface"],
-                event["action"],
+                self.translate_action(event["action"]),
                 event["key"],
                 event["usage"],
             ]
@@ -486,12 +493,12 @@ class KeyboardDashboardWindow(QMainWindow):
             self.set_message(message, False)
         else:
             self.set_message(message, True)
-            QMessageBox.warning(self, "Action failed", message)
+            QMessageBox.warning(self, "Thao tac that bai", message)
 
 
 def main() -> None:
     app = QApplication(sys.argv)
-    app.setApplicationName("USB Keyboard Driver Dashboard")
+    app.setApplicationName("Bang Dieu Khien Driver Ban Phim USB")
     window = KeyboardDashboardWindow()
     window.show()
     sys.exit(app.exec_())

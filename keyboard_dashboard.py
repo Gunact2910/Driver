@@ -23,7 +23,7 @@ HTML_PAGE = """<!doctype html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>USB Keyboard Driver Dashboard</title>
+  <title>Bang Dieu Khien Driver Ban Phim USB</title>
   <style>
     :root {
       --bg: #f2ede2;
@@ -192,59 +192,59 @@ HTML_PAGE = """<!doctype html>
   <main class="shell">
     <section class="hero">
       <div>
-        <h1>USB Keyboard Driver Dashboard</h1>
-        <p>Dashboard local cho bai 2: quan sat driver, xem su kien phim theo thoi gian thuc, thong ke va dieu khien bind/unbind.</p>
+        <h1>Bang Dieu Khien Driver Ban Phim USB</h1>
+        <p>Giao dien local cho bai 2: theo doi driver, xem su kien phim theo thoi gian thuc, thong ke va dieu khien bind/unbind.</p>
       </div>
       <div class="toolbar">
-        <button onclick="runAction('bind_all')">Bind All</button>
-        <button class="secondary" onclick="runAction('unbind_all')">Unbind All</button>
-        <button class="secondary" onclick="runAction('logging_on')">Logging On</button>
-        <button class="secondary" onclick="runAction('logging_off')">Logging Off</button>
-        <button class="secondary" onclick="runAction('clear_history')">Clear History</button>
-        <button class="warn" onclick="runAction('reset_stats')">Reset Stats</button>
+        <button onclick="runAction('bind_all')">Gan Tat Ca</button>
+        <button class="secondary" onclick="runAction('unbind_all')">Go Gan Tat Ca</button>
+        <button class="secondary" onclick="runAction('logging_on')">Bat Ghi Log</button>
+        <button class="secondary" onclick="runAction('logging_off')">Tat Ghi Log</button>
+        <button class="secondary" onclick="runAction('clear_history')">Xoa Lich Su</button>
+        <button class="warn" onclick="runAction('reset_stats')">Dat Lai Thong Ke</button>
       </div>
-      <div class="status-line" id="message">Waiting for first refresh...</div>
+      <div class="status-line" id="message">Dang cho lan cap nhat dau tien...</div>
     </section>
 
     <section class="grid">
       <div class="panel stats">
-        <div class="stat"><span>Module</span><strong id="moduleLoaded">-</strong></div>
-        <div class="stat"><span>Active Devices</span><strong id="activeDevices">0</strong></div>
-        <div class="stat"><span>Press Events</span><strong id="pressCount">0</strong></div>
-        <div class="stat"><span>Release Events</span><strong id="releaseCount">0</strong></div>
+        <div class="stat"><span>Trang Thai Module</span><strong id="moduleLoaded">-</strong></div>
+        <div class="stat"><span>Thiet Bi Dang Hoat Dong</span><strong id="activeDevices">0</strong></div>
+        <div class="stat"><span>So Lan Nhan Phim</span><strong id="pressCount">0</strong></div>
+        <div class="stat"><span>So Lan Nha Phim</span><strong id="releaseCount">0</strong></div>
       </div>
 
       <section class="panel two-col">
-        <h2>Driver State</h2>
-        <div class="note">Doc tu <span class="mono">/proc/kb_driver</span>. Ghi chu: cac thao tac bind/unbind va ghi vao proc de dieu khien co the can root.</div>
+        <h2>Trang Thai Driver</h2>
+        <div class="note">Doc tu <span class="mono">/proc/kb_driver</span>. Luu y: thao tac bind/unbind va ghi vao proc de dieu khien co the can quyen root.</div>
         <table>
           <tbody>
-            <tr><th>Logging enabled</th><td id="loggingEnabled">-</td></tr>
-            <tr><th>History entries</th><td id="historyEntries">0</td></tr>
-            <tr><th>Proc file</th><td class="mono">/proc/kb_driver</td></tr>
-            <tr><th>Dashboard</th><td class="mono">http://127.0.0.1:8081</td></tr>
+            <tr><th>Ghi log</th><td id="loggingEnabled">-</td></tr>
+            <tr><th>So muc lich su</th><td id="historyEntries">0</td></tr>
+            <tr><th>Tep proc</th><td class="mono">/proc/kb_driver</td></tr>
+            <tr><th>Dia chi dashboard</th><td class="mono">http://127.0.0.1:8081</td></tr>
           </tbody>
         </table>
       </section>
 
       <section class="panel two-col">
-        <h2>USB Keyboard Interfaces</h2>
+        <h2>Giao Dien Ban Phim USB</h2>
         <div class="note">Doc tu script trang thai de xac dinh thiet bi va driver hien tai.</div>
         <div class="device-list" id="devices"></div>
       </section>
 
       <section class="panel full">
-        <h2>Recent Events</h2>
+        <h2>Su Kien Gan Day</h2>
         <div class="scroll">
           <table>
             <thead>
               <tr>
-                <th>Seq</th>
-                <th>Time</th>
-                <th>Interface</th>
-                <th>Action</th>
-                <th>Key</th>
-                <th>Usage</th>
+                <th>STT</th>
+                <th>Thoi Gian</th>
+                <th>Giao Dien</th>
+                <th>Hanh Dong</th>
+                <th>Phim</th>
+                <th>Ma Usage</th>
               </tr>
             </thead>
             <tbody id="historyRows"></tbody>
@@ -253,15 +253,15 @@ HTML_PAGE = """<!doctype html>
       </section>
 
       <section class="panel full">
-        <h2>Key Statistics</h2>
+        <h2>Thong Ke Phim</h2>
         <div class="scroll">
           <table>
             <thead>
               <tr>
-                <th>Usage</th>
-                <th>Name</th>
-                <th>Pressed</th>
-                <th>Released</th>
+                <th>Ma Usage</th>
+                <th>Ten Phim</th>
+                <th>So Lan Nhan</th>
+                <th>So Lan Nha</th>
               </tr>
             </thead>
             <tbody id="statsRows"></tbody>
@@ -289,6 +289,12 @@ HTML_PAGE = """<!doctype html>
       message.style.color = isError ? '#7c2d12' : '#124134';
     }
 
+    function translateAction(action) {
+      if (action === 'pressed') return 'Nhan';
+      if (action === 'released') return 'Nha';
+      return action || '-';
+    }
+
     function renderDevices(devices) {
       const container = document.getElementById('devices');
       container.innerHTML = '';
@@ -304,7 +310,7 @@ HTML_PAGE = """<!doctype html>
           <div><strong>${device.interface || '-'}</strong></div>
           <div>Driver: <span class="mono">${device.driver || '-'}</span></div>
           <div>VID:PID: <span class="mono">${device.vendor_product || '-'}</span></div>
-          <div>Device: ${device.device || '-'}</div>
+          <div>Thiet bi: ${device.device || '-'}</div>
         `;
         container.appendChild(card);
       }
@@ -323,7 +329,7 @@ HTML_PAGE = """<!doctype html>
           <td class="mono">${event.seq}</td>
           <td class="mono">${event.timestamp}</td>
           <td class="mono">${event.interface}</td>
-          <td>${event.action}</td>
+          <td>${translateAction(event.action)}</td>
           <td>${event.key}</td>
           <td class="mono">${event.usage}</td>
         `;
@@ -353,16 +359,16 @@ HTML_PAGE = """<!doctype html>
     async function refresh() {
       try {
         const data = await fetchDashboard();
-        document.getElementById('moduleLoaded').textContent = data.module_loaded ? 'Loaded' : 'Not loaded';
+        document.getElementById('moduleLoaded').textContent = data.module_loaded ? 'Da nap' : 'Chua nap';
         document.getElementById('activeDevices').textContent = data.proc.active_devices ?? 0;
         document.getElementById('pressCount').textContent = data.proc.total_press_events ?? 0;
         document.getElementById('releaseCount').textContent = data.proc.total_release_events ?? 0;
-        document.getElementById('loggingEnabled').textContent = data.proc.logging_enabled ? 'Yes' : 'No';
+        document.getElementById('loggingEnabled').textContent = data.proc.logging_enabled ? 'Bat' : 'Tat';
         document.getElementById('historyEntries').textContent = data.proc.history_entries ?? 0;
         renderDevices(data.devices);
         renderHistory(data.proc.history || []);
         renderStats(data.proc.key_stats || []);
-        setMessage(data.message || 'Dashboard updated');
+        setMessage(data.message || 'Dashboard da duoc cap nhat');
       } catch (error) {
         setMessage('Khong doc duoc dashboard data. Kiem tra module va quyen truy cap.', true);
       }
@@ -383,10 +389,10 @@ HTML_PAGE = """<!doctype html>
           body: new URLSearchParams({ action }),
         });
         const result = await response.json();
-        setMessage(result.message || 'Action finished', !result.ok);
+        setMessage(result.message || 'Thao tac da hoan tat', !result.ok);
         await refresh();
       } catch (error) {
-        setMessage('Action failed', true);
+        setMessage('Thao tac that bai', true);
       } finally {
         busy = false;
         for (const button of document.querySelectorAll('button')) {
@@ -535,7 +541,7 @@ def collect_dashboard_data() -> dict:
     proc_state = read_proc_state()
     status_ok, status_text = run_command([STATUS_SCRIPT])
     module_loaded = os.path.isdir("/sys/bus/usb/drivers/kb_driver")
-    message = "Dashboard updated"
+    message = "Dashboard da duoc cap nhat"
     if not module_loaded:
         message = "kb_driver chua duoc nap. Can insmod va bind thiet bi de xem su kien."
     elif not status_ok:
